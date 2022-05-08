@@ -9,10 +9,48 @@ html {
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
+    background-color: #282A36;
+    color: #fff;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #282A36;
+    color: #fff;
+    margin: 0px;
+    padding: 0px;
+}
+
+.navbar {
+    height: 7vh;
+}
+
+.render-body {
+    min-height: 88vh;
+}
+
+.footer {
+    height: 5vh;
+}
+
+.bg-dracula {
+    background-color: #282A36;
+}
+
+.bg-dracula-dark {
+    background-color: #383A59;
+}
+
+.logo {
+    width: 40px;
+}
+
+.footer-border {
+    border-top: 1px solid #383A59;
+}
+
+.font-righteous {
+    font-family: 'Righteous';
 }
