@@ -3,36 +3,37 @@
 @{
     ViewData["Title"] = "Registre-se";
 }
-
-<div class="row w-100">
-    <div class="d-none d-md-block col-md-6 text-center">
-        <h1 class="font-righteous">AnimeFlix</h1>
-        <img src="~/assets/icon.png" class="img-fluid" style="max-width: 250px" />
-    </div>
-    <div class="col-12 col-md-6">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Crie uma nova conta</h2>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating text-dark my-2">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
-                <label asp-for="Input.Email"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating text-dark my-2">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.Password"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating text-dark my-2">
-                <input asp-for="Input.ConfirmPassword" class="form-control bg" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.ConfirmPassword"></label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg text-light bg-dracula-dark">Register</button>
-        </form>
+<div class="container-fluid h100 d-flex flex-column align-items-center justify-content-center">
+    <div class="row w-100 m-0 p-0">
+        <div class="d-none d-md-block col-md-6 text-center">
+            <h1 class="font-righteous">AnimeFlix</h1>
+            <img src="~/assets/icon.png" class="img-fluid" style="max-width: 250px" />
+        </div>
+        <div class="col-12 col-md-6">
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <h2>Crie uma nova conta</h2>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating text-dark my-2">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                    <label asp-for="Input.Email"></label>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating text-dark my-2">
+                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                    <label asp-for="Input.Password"></label>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-floating text-dark my-2">
+                    <input asp-for="Input.ConfirmPassword" class="form-control bg" autocomplete="new-password" aria-required="true" />
+                    <label asp-for="Input.ConfirmPassword"></label>
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg text-light bg-dracula-dark">Register</button>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 }

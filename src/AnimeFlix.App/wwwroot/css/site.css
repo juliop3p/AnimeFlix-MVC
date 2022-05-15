@@ -21,6 +21,7 @@ body {
     color: #fff;
     margin: 0px;
     padding: 0px;
+    min-height: 100vh;
 }
 
 .navbar {
@@ -28,12 +29,13 @@ body {
 }
 
 .render-body {
-    min-height: 88vh;
+    min-height: 93vh;
 }
 
-.footer {
-    height: 5vh;
+.h100 {
+    min-height: 93vh;
 }
+
 
 .bg-dracula {
     background-color: #282A36;

@@ -5,16 +5,19 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        @*<li class="nav-item">
-            <a  class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        <div class="d-block d-md-none">
+            <li class="nav-item">
+                <div></div>
+                <a class="nav-link text-light font-righteous" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Minha Conta</a>
             </li>
             <li class="nav-item">
-            <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-light">Logout</button>
-            </form>
-            </li>*@
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="nav-link btn btn-link text-light font-righteous">Sair</button>
+                </form>
+            </li>
+        </div>
 
-        <div class="btn-group dropstart">
+        <div class="btn-group dropstart d-none d-md-block">
             <button type="button" class="btn text-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="https://occ-0-1560-1740.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABX6DLky7StcW3gIuvZrk9CVt4uxtvVV6xxcyemdSGCy3EzCOcXsgFmX5SarNixB8aBBxLiyyv1VoJ7GevJkkenvPMyLwZJA.png?r=6c5">
             </button>
@@ -30,10 +33,10 @@
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <li class="nav-item font-righteous">
+            <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Register">Registre-se</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item font-righteous">
             <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
     }

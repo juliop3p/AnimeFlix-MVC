@@ -26,24 +26,20 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item font-righteous">
-                            <a class="nav-link text-light " asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        @*<li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>*@
+                        <li class="nav-item font-righteous">
+                            <a class="nav-link text-light" asp-area="Dashboard" asp-controller="Index" asp-action="Index">Dashboard</a>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container-fluid render-body d-flex flex-column align-items-center justify-content-center">
+    <div class="container-fluid render-body">
             @RenderBody()
     </div>
-
-    <footer class="text-light footer-border px-5 d-flex align-items-center justify-content-center h-100">
-            &copy; 2022 - AnimeFlix.App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
