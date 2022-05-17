@@ -1,4 +1,7 @@
-﻿using AnimeFlix.App.Models;
+﻿using AnimeFlix.App.Areas.Dashboard.Models;
+using AnimeFlix.App.Models;
+using AnimeFlix.Business.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,15 +10,23 @@ namespace AnimeFlix.App.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IAnimeRepository _repository;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IAnimeRepository repository, IMapper mapper)
         {
             _logger = logger;
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var animes = await _repository.GetAll();
+
+            var animesViewModel = _mapper.Map<IEnumerable<AnimeViewModel>>(animes);
+
+            return View(animesViewModel);
         }
 
         public IActionResult Privacy()

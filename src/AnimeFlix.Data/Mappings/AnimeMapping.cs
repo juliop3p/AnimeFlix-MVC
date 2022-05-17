@@ -16,7 +16,7 @@ namespace AnimeFlix.Data.Mappings
 
             builder.Property(a => a.Imagem)
                 .IsRequired()
-                .HasColumnType("varchar(100)");
+                .HasColumnType("varchar(500)");
 
             builder.Property(a => a.Url)
                 .IsRequired()

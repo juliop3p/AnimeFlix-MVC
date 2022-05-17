@@ -1,0 +1,14 @@
+﻿@model IEnumerable<AnimeFlix.App.Areas.Dashboard.Models.AnimeViewModel>
+
+
+<div class="container-fluid d-flex">
+    @foreach (var item in Model)
+    {
+        <a class="card ms-3 me-3" style="width: 18rem;" asp-area="Player" asp-controller="Player" asp-action="Index" asp-route-id="@item.Id">
+            <img src="@item.Imagem" class="card-img-top" alt="@item.Name">
+            <div class="card-body">
+                <p class="card-text text-dark">@item.Name</p>
+            </div>
+        </a>
+    }
+</div>
