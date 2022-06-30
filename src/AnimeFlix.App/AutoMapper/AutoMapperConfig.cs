@@ -1,5 +1,5 @@
-﻿using AnimeFlix.App.Areas.Dashboard.Models;
-using AnimeFlix.Business.Models;
+﻿using AnimeFlix.App.Models;
+using AnimeFlix.Business.Entities;
 using AutoMapper;
 
 namespace AnimeFlix.App.AutoMapper
@@ -8,7 +8,11 @@ namespace AnimeFlix.App.AutoMapper
     {
         public AutoMapperConfig()
         {
-            CreateMap<Anime, AnimeViewModel>().ReverseMap();
+            CreateMap<Anime, AnimeViewModel>()
+                .ReverseMap();
+
+            CreateMap<Session, SessionViewModel>()
+                .ReverseMap();
         }
     }
 }

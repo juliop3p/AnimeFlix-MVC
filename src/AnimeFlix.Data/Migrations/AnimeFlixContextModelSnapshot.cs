@@ -17,35 +17,34 @@ namespace AnimeFlix.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("AnimeFlix.Business.Models.Anime", b =>
+            modelBuilder.Entity("AnimeFlix.Business.Entities.Anime", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Imagem")
+                    b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("varchar(500)");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("varchar(200)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Animes", (string)null);
+                    b.ToTable("Animes");
                 });
 
-            modelBuilder.Entity("AnimeFlix.Business.Models.Session", b =>
+            modelBuilder.Entity("AnimeFlix.Business.Entities.Session", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +54,6 @@ namespace AnimeFlix.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CurrentEp")
-                        .HasMaxLength(5000)
                         .HasColumnType("int");
 
                     b.Property<int>("CurrentTime")
@@ -69,21 +67,20 @@ namespace AnimeFlix.Data.Migrations
                     b.HasIndex("AnimeId")
                         .IsUnique();
 
-                    b.ToTable("Sessions", (string)null);
+                    b.ToTable("Sessions");
                 });
 
-            modelBuilder.Entity("AnimeFlix.Business.Models.Session", b =>
+            modelBuilder.Entity("AnimeFlix.Business.Entities.Session", b =>
                 {
-                    b.HasOne("AnimeFlix.Business.Models.Anime", "Anime")
+                    b.HasOne("AnimeFlix.Business.Entities.Anime", "Anime")
                         .WithOne("Session")
-                        .HasForeignKey("AnimeFlix.Business.Models.Session", "AnimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("AnimeFlix.Business.Entities.Session", "AnimeId")
                         .IsRequired();
 
                     b.Navigation("Anime");
                 });
 
-            modelBuilder.Entity("AnimeFlix.Business.Models.Anime", b =>
+            modelBuilder.Entity("AnimeFlix.Business.Entities.Anime", b =>
                 {
                     b.Navigation("Session");
                 });

@@ -1,9 +1,9 @@
-﻿using AnimeFlix.Business.Models;
+﻿using AnimeFlix.Business.Entities;
 
 namespace AnimeFlix.Business.Interfaces
 {
     public interface ISessionRepository : IRepository<Session>
     {
-        Task<List<Session>> GetAllSessionsByUserAsync(Guid userId);
+        Task SaveSession(Session Session);
     }
 }

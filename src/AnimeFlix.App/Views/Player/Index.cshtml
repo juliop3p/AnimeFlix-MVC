@@ -1,0 +1,387 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model AnimeFlix.App.Models.AnimeViewModel;
+@using AnimeFlix.App.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
+    ViewData["Title"] = Model.Name;
+
+    var url = $"{Model.Url}/01.mp4";
+    var logged = "NotLogged";
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        url = $"{Model.Url}/{Model.Session.CurrentEp.ToString("00")}.mp4";
+        logged = "Logged";
+    }
+}
+
+<div class="player">
+    <video id="player" @logged src="@url" autoplay>
+        <source />
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="sob-layer" onclick="hideControls(event)">
+        <div class="top">
+            <span class="anime-name text-white">E<span id="currentEp"></span>: @Model.Name</span>
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div class="dropdown">
+                    <i data-feather="monitor" class="feather-32 cursor-pointer mx-3" id="dropdownAnime"
+                        data-bs-toggle="dropdown" aria-expanded="false" onclick="choosingEpisode()"></i>
+                    <ul class="dropdown-menu dropdown-menu-dark text-center" aria-labelledby="dropdownAnime">
+                        @for (int i = 1; i < 1500; i++)
+                        {
+                            <li class="cursor-pointer" onclick="selectNewEp(@i)">@i.ToString("00") - Episódio</li>
+                            <hr />
+                        }
+                    </ul>
+                </div>
+
+                <i id="maximize" data-feather="maximize-2" class="feather-32 cursor-pointer mx-3"
+                    onclick="toggleFullScreen()"></i>
+
+                <i id="minimize" data-feather="minimize-2" class="feather-32 cursor-pointer mx-3"
+                    onclick="toggleFullScreen()"></i>
+
+                <div class="vertical-bar mx-3"></div>
+
+                <i data-feather="x" class="feather-40 cursor-pointer" onclick="goBack()"></i>
+            </div>
+        </div>
+
+        <div class="middle">
+            <i id="left" data-feather="rotate-ccw" class="feather-60 cursor-pointer" onclick="regressVideo()"></i>
+            <i id="play" data-feather="play" class="feather-96 mx-5 cursor-pointer" onclick="playOrPauseVideo()"></i>
+            <i id="pause" data-feather="pause" class="feather-96 mx-5 cursor-pointer" onclick="playOrPauseVideo()"></i>
+            <i id="right" data-feather="rotate-cw" class="feather-60 cursor-pointer" onclick="progressVideo()"></i>
+        </div>
+
+        <div class="bottom">
+            <div class="percentage-bar">
+                <input type="range" value="0" class="player-time cursor-pointer" onchange="onPlayerTimeChange()">
+            </div>
+            <div class="bottom-controls">
+                <div class="time">
+                    <span class="current-time">
+                        10:25
+                    </span>
+                    <span class="remaining-time">
+                        / <spam id="remaining-time">09:29</spam>
+                    </span>
+                </div>
+                <div>
+                    <a onclick="nextEp()" class="next-ep cursor-pointer">Próx. Ep
+                        <i data-feather="chevron-right" class="feather-32"></i></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    feather.replace()
+</script>
+
+<script>
+    // Variables dependent of C#
+    const isUserLogged = "@logged" === "Logged" ? true : false;
+
+    const session = {
+        id: String("@Model.Session.Id"),
+        currentEp: parseInt(@Model.Session.CurrentEp),
+        currentTime: parseInt(@Model.Session.CurrentTime),
+        animeId: String("@Model.Id"),
+    };
+
+    // Global vars
+    const player = document.getElementById("player");
+    const playIcon = document.getElementById("play");
+    const pauseIcon = document.getElementById("pause");
+    const maximizeIcon = document.getElementById("maximize");
+    const minimizeIcon = document.getElementById("minimize");
+    const playerTime = document.querySelector(".player-time");
+    const sobLayer = document.querySelector(".sob-layer");
+    let timer;
+    let isPlaying = true;
+    let timeToHide = 5000;
+    let isChoosingEpisode = false;
+    const url = window.location.pathname;
+    let sessions = [];
+    let lastTime = 0;
+
+    const getSessionFromSessions = (id) => {
+        if (sessions.length > 0) {
+            var index = sessions.findIndex((session) => session.animeId === id);
+            return sessions[index];
+        }
+    };
+
+    const buildUrl = (url, ep) => {
+        var splitedUrl = url.split("/");
+        var lastPosition = splitedUrl.length - 1;
+
+        splitedUrl[lastPosition] = `${String(ep).padStart(2, 0)}.mp4`;
+
+        return splitedUrl.join("/");
+    };
+
+    const saveSessionAsync = (session) => {
+        fetch("/Session/SaveSession", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(session),
+        }).then((res) => {
+            if (res.status === 200) {
+                return console.info("[INFO] - SESSION SAVED");
+            }
+
+            console.error("[INFO] - COULDN'T SAVE SESSION");
+        });
+    };
+
+    const saveSessionInLocalStorage = (session) => {
+        // check if exists some session
+        if (!sessions) {
+            sessions = [];
+        }
+
+        var index = sessions.findIndex((s) => s.id === session.id);
+
+        // save in existing session
+        if (index > -1) {
+            sessions[index].id = session.id;
+            sessions[index].currentEp = session.currentEp;
+            sessions[index].currentTime = session.currentTime;
+            sessions[index].animeId = session.animeId;
+        } else {
+            sessions.push(session);
+        }
+
+        localStorage.setItem("sessions", JSON.stringify(sessions));
+    };
+
+    const updateAnime = () => {
+        document.getElementById("currentEp").innerHTML = session.currentEp;
+    }
+
+    const setAnime = () => {
+        player.src = buildUrl(player.src, session.currentEp);
+        player.currentTime = session.currentTime;
+        lastTime = session.currentTime;
+
+        if (isUserLogged) {
+            saveSessionAsync(session);
+        } else {
+            saveSessionInLocalStorage(session);
+        }
+
+        updateAnime();
+    }
+
+    const nextEp = () => {
+        session.currentEp = parseInt(session.currentEp + 1);
+        session.currentTime = parseInt(0);
+
+        setAnime();
+    }
+
+    const selectNewEp = (episode) => {
+        session.currentEp = parseInt(episode);
+        session.currentTime = parseInt(0);
+
+        setAnime();
+    }
+
+    const saveCurrentStatus = () => {
+        let currentTime = player.currentTime;
+
+        // prevent save session in less than 50 seconds passed
+        if (currentTime < lastTime + 50) return;
+
+        lastTime = currentTime;
+
+        session.currentTime = parseInt(currentTime);
+
+        if (isUserLogged) {
+            saveSessionAsync(session);
+        } else {
+            saveSessionInLocalStorage(session);
+        }
+    }
+
+    const goBack = () => {
+        saveCurrentStatus();
+
+        window.history.back();
+    }
+
+    const toggleFullScreen = () => {
+        if (!document.fullscreenElement) {
+            maximizeIcon.style.display = "none";
+            minimizeIcon.style.display = "block";
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                maximizeIcon.style.display = "block";
+                minimizeIcon.style.display = "none";
+                document.exitFullscreen();
+            }
+        }
+    }
+
+    const regressVideo = () => {
+        player.currentTime -= 10;
+        updateScreenTime();
+    }
+
+    const progressVideo = () => {
+        player.currentTime += 10;
+        updateScreenTime();
+    }
+
+    const playVideo = () => {
+        playIcon.style.display = "none";
+        pauseIcon.style.display = "block";
+        player.play();
+        isPlaying = true;
+    }
+
+    const pauseVideo = () => {
+        pauseIcon.style.display = "none";
+        playIcon.style.display = "block";
+        player.pause();
+        isPlaying = false;
+    }
+
+    const playOrPauseVideo = () => {
+        if (isPlaying)
+            pauseVideo();
+        else
+            playVideo();
+    }
+
+    const onPlayerTimeChange = () => {
+        const newTime = playerTime.value;
+        player.currentTime = (newTime * player.duration) / 100;
+    };
+
+    const prettyTime = (t) => {
+        let minutes = Math.floor(t / 60);
+        if (minutes < 10) minutes = "0" + minutes;
+        let seconds = Math.floor(t % 60);
+        if (seconds < 10) seconds = "0" + seconds;
+        return `${minutes}:${seconds}`;
+    }
+
+    const choosingEpisode = () => {
+        isChoosingEpisode = !isChoosingEpisode;
+    }
+
+    const hideControls = (event) => {
+        var dropdown = document.querySelector("#dropdownAnime");
+
+        if (event && event.target != dropdown) {
+            isChoosingEpisode = false;
+        }
+    }
+
+    const showAndHideControls = () => {
+        sobLayer.style.display = "grid";
+
+
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            if (!isChoosingEpisode)
+                sobLayer.style.display = "none";
+
+        }, timeToHide);
+    }
+
+    const keyBoardAction = () => {
+        document.addEventListener("keyup", (event) => {
+            if (event.code === "Space") {
+                playOrPauseVideo();
+            } else if (event.code === "ArrowLeft") {
+                regressVideo();
+            } else if (event.code === "ArrowRight") {
+                progressVideo();
+            } else if (event.code === "KeyF") {
+                toggleFullScreen();
+            }
+        });
+    }
+
+    const updateScreenTime = () => {
+        const currentTimeHtml = document.querySelector(".current-time");
+        const remainingTimeHtml = document.querySelector("#remaining-time");
+
+        const duration = player.duration;
+        const currentTime = player.currentTime;
+
+        remainingTimeHtml.innerText = prettyTime(duration - currentTime || 00);
+        currentTimeHtml.innerText = prettyTime(currentTime || 00);
+
+        const percent = (currentTime / duration) * 100;
+        playerTime.value = percent;
+    }
+
+    (function onInit() {
+        try {
+            sessions = JSON.parse(localStorage.getItem("sessions"));
+        } catch (error) {
+            console.error(error.message)
+            localStorage.removeItem("sessions");
+        }
+
+        updateAnime();
+
+        // set anime by session data
+        if (!isUserLogged) {
+            const id = url.substring(url.lastIndexOf("/") + 1);
+            session.animeId = id;
+
+            if (sessions) {
+                const sessionTemp = getSessionFromSessions(id);
+
+                if (sessionTemp) {
+                    session.id = sessionTemp.id;
+                    session.animeId = id;
+                    session.currentEp = sessionTemp.currentEp;
+                    session.currentTime = sessionTemp.currentTime;
+
+                    player.src = buildUrl(player.src, session.currentEp);
+                    player.currentTime = session.currentTime;
+                    lastTime = session.currentTime;
+
+                    updateAnime();
+                }
+            }
+        }
+
+        // set current time by session from server
+        if (isUserLogged) {
+            player.currentTime = session.currentTime;
+            lastTime = session.currentTime;
+        }
+
+        window.addEventListener("mousemove", () => showAndHideControls());
+        keyBoardAction();
+
+        // update percentage bar and video time on screen
+        setInterval(() => {
+            if (isPlaying) {
+                updateScreenTime();
+            }
+        }, 300);
+
+        // save session every after 60 seconds
+        setInterval(() => {
+            saveCurrentStatus();
+
+        }, 60000);
+    })();
+</script>

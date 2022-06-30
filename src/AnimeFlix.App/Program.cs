@@ -1,34 +1,49 @@
+using AnimeFlix.App.Configurations;
 using AnimeFlix.App.Data;
-using AnimeFlix.Business.Interfaces;
+using AnimeFlix.App.Identity;
 using AnimeFlix.Data.Context;
-using AnimeFlix.Data.Repository;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");;
 
+builder.Configuration
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", true, true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
+    .AddEnvironmentVariables();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
+
+// Context Identity.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 0;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+})
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-
-// Add services to the container.
-builder.Services.AddDbContext<AnimeFlixContext>(options =>
-    options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<AnimeFlixContext>();
-builder.Services.AddScoped<IAnimeRepository, AnimeRepository>();
-builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+// Context App.
+builder.Services.AddDbContext<AnimeFlixContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.ResolveDependencies();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddMvcConfiguration();
 
 var app = builder.Build();
 
@@ -52,26 +67,17 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-var defaultCulture = new CultureInfo("pt-BR");
-var localizationOptions = new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new RequestCulture(defaultCulture),
-    SupportedCultures = new List<CultureInfo> { defaultCulture },
-    SupportedUICultures = new List<CultureInfo> { defaultCulture }
-};
-app.UseRequestLocalization(localizationOptions);
-
-app.MapControllerRoute(
-    name: "Player",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-app.MapControllerRoute(
-    name: "Dashboard",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+app.UseGlobalizationConfig();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+MigrationsConfig.Migrate(builder.Services).Wait();
+
+UsersConfig.CreateRoles(builder.Services).Wait();
+
+UsersConfig.CreatePowerUser(builder.Services, builder.Configuration).Wait();
 
 app.Run();

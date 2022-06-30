@@ -1,7 +1,62 @@
-﻿@{
-    ViewData["Title"] = "Inicio";
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<AnimeFlix.App.Models.AnimeViewModel>
+@using AnimeFlix.App.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="my-5">
-    <partial name="_ListaAnimes" />
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="continue-watching-text">
+        <h4 class="text-light mb-3">Continue assistindo</h4>
+        <hr>
+    </div>
+}
+
+<div class="row">
+
+    @foreach (var anime in Model)
+    {
+        if (anime?.Session?.CurrentTime > 0)
+        {
+            <a class="card continue-watching border-0 mb-4"
+        style="width: 14rem; margin: 0px 8px; padding: 0px; text-decoration:none;" asp-controller="Player"
+        asp-action="Index" asp-route-id="@anime.Id">
+                <img src="@anime.Image" class="card-img-top" alt="@anime.Name">
+                <div class="card-layer">
+                    <i class="fa fa-play fa-3x tc-primary"></i>
+                    <i data-feather="play" class="feather-60 cursor-pointer tc-primary"></i>
+                </div>
+            </a>
+        }
+    }
 </div>
+
+<h4 class="text-light mt-5 mb-3">Animes</h4>
+<hr>
+
+<div class="row">
+    @foreach (var anime in Model)
+    {
+        <a class="card border-0 mb-4" style="width: 14rem; margin: 0px 8px; padding: 0px; text-decoration:none;"
+        asp-controller="Player" asp-action="Index" asp-route-id="@anime.Id">
+            <img src="@anime.Image" class="card-img-top" alt="@anime.Name">
+            <div class="card-layer">
+                <i class="fa fa-play fa-3x tc-primary"></i>
+                <i data-feather="play" class="feather-60 cursor-pointer tc-primary"></i>
+            </div>
+        </a>
+    }
+</div>
+
+<script>
+    const continueWatchingCard = document.querySelector(".continue-watching");
+    const continueWatchingText = document.querySelector(".continue-watching-text");
+
+    if (!continueWatchingCard && continueWatchingText) {
+        continueWatchingText.style.display = "none";
+    }
+
+</script>

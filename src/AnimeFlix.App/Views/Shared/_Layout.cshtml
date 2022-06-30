@@ -1,48 +1,81 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AnimeFlix.App</title>
-    <link rel="icon" href="~/assets/icon.png" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - AnimeFlix</title>
+
+    @* App Styles *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AnimeFlix.App.styles.css" asp-append-version="true" />
+    <link rel="icon" href="~/images/icon.png" />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Righteous&display=swap"
-      rel="stylesheet"
-    />
+    @* Icons *@
+    <script src="~/lib/feather-icons/feather.min.js"></script>
+
+    @* Google Fonts *@
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,300;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    @* Bootstrap *@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
-<body>
+
+<body style="background-color: var(--dark); color: var(--white);">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dracula-dark box-shadow">
-            <div class="container-fluid">
-                <img src="~/assets/icon.png" class="navbar-brand logo" asp-area="" asp-controller="Home" asp-action="Index"/>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item font-righteous">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item font-righteous">
-                            <a class="nav-link text-light" asp-area="Dashboard" asp-controller="Index" asp-action="Index">Dashboard</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bgc-dark box-shadow mb-3">
+            <div class="container">
+                <div class="w-100 d-flex justify-content-between align-items-center">
+                    <div>
+                        <a class="logo" asp-area="" asp-controller="Home" asp-action="Index">AnimeFlix</a>
+                    </div>
+
+                    <div class="d-none d-xl-block">
+                        <div class="search-container" data-tip="Disponível em breve!">
+                            <div class="icon-container d-flex align-items-center justify-content-center">
+                                <i data-feather="search" class="feather-16 text-white cursor-pointer"></i>
+                            </div>
+                            <input class="input-search" type="text" placeholder="Naruto Shippuden..." disabled />
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="d-none d-md-flex align-items-center justify-content-center">
+                            <partial name="_LoginPartial" />
+                        </div>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="d-block d-md-none">
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container-fluid render-body">
+    <div class="container">
+        <main role="main" class="pb-3">
             @RenderBody()
+        </main>
     </div>
+    <script>
+        feather.replace()
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

@@ -1,4 +1,4 @@
-﻿using AnimeFlix.Business.Models;
+﻿using AnimeFlix.Business.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,24 +8,19 @@ namespace AnimeFlix.Data.Mappings
     {
         public void Configure(EntityTypeBuilder<Anime> builder)
         {
-            builder.HasKey(a => a.Id);
+            builder.HasKey(anime => anime.Id);
 
-            builder.Property(a => a.Name)
+            builder.Property(anime => anime.Name)
                 .IsRequired()
-                .HasColumnType("varchar(100)");
+                .HasColumnType("varchar(200)");
 
-            builder.Property(a => a.Imagem)
+            builder.Property(anime => anime.Image)
                 .IsRequired()
                 .HasColumnType("varchar(500)");
 
-            builder.Property(a => a.Url)
+            builder.Property(anime => anime.Image)
                 .IsRequired()
-                .HasColumnType("varchar(100)");
-
-            builder.HasOne(a => a.Session)
-                .WithOne(s => s.Anime);
-
-            builder.ToTable("Animes");
+                .HasColumnType("varchar(300)");
         }
     }
 }

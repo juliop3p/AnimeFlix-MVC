@@ -1,0 +1,59 @@
+﻿@model AnimeFlix.App.Models.AnimeViewModel;
+
+@{
+    ViewData["Title"] = "Novo Anime";
+}
+
+<style>
+    .video-preview {
+        display: none;
+    }
+</style>
+
+<h3 style="padding-top: 50px">@ViewData["Title"]</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-10">
+        <video class="video-preview" width="320" height="240" controls>
+
+        </video>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" onblur="playAnimePreview(event)" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Criar" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    const playAnimePreview = (event) => {
+        const player = document.querySelector(".video-preview");
+        const baseUrl = "https://pitou.goyabu.com/";
+        const anime = event.target.value;
+
+        player.src = `https://pitou.goyabu.com/${String(anime)
+            .toLocaleLowerCase()
+            .replaceAll(" ", "-")}/01.mp4`;
+
+        player.style.display = "block";
+
+        player.play();
+    }
+</script>

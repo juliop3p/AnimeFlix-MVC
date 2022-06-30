@@ -1,4 +1,4 @@
-﻿using AnimeFlix.Business.Models;
+﻿using AnimeFlix.Business.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,17 +8,22 @@ namespace AnimeFlix.Data.Mappings
     {
         public void Configure(EntityTypeBuilder<Session> builder)
         {
-            builder.HasKey(s => s.Id);
+            builder.HasKey(session => session.Id);
 
-            builder.Property(s => s.CurrentEp)
-                .IsRequired()
-                .HasMaxLength(5000);
-
-            builder.Property(s => s.CurrentTime)
+            builder.Property(session => session.CurrentTime)
                 .IsRequired();
 
-            builder.ToTable("Sessions");
+            builder.Property(session => session.CurrentEp)
+                .IsRequired();
 
+            builder.Property(session => session.UserId)
+                .IsRequired();
+
+            builder.Property(session => session.AnimeId)
+                .IsRequired();
+
+            builder.HasOne(session => session.Anime)
+                .WithOne(anime => anime.Session);
         }
     }
 }

@@ -1,0 +1,27 @@
+﻿@model AnimeFlix.App.Models.AnimeViewModel;
+
+@{
+    ViewData["Title"] = "Delete Anime";
+}
+
+<h3 style="padding-top: 50px">@ViewData["Title"]</h3>
+
+<h5>Are you sure about this?</h5>
+
+<hr />
+
+<div class="row">
+    <div class="card" style="width: 14rem;">
+        <img src="@Model.Image" class="card-img-top" alt="@Model.Name">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+        </div>
+    </div>
+
+    <form asp-action="Delete" class="mt-5">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a class="btn btn-secondary" href="javascript:window.history.back();">Cancel</a>
+    </form>
+</div>
+

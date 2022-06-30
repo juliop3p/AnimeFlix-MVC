@@ -3,31 +3,33 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-AnimeFlix.App-D62AF82C-87D6-4455-B815-B4B31E02AD62</UserSecretsId>
+    <UserSecretsId>aspnet-AnimeFlix.App-84D6D111-E41B-4B3E-B17C-DA3BB6596426</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Home\Index.cshtml.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml.css" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AnimeFlix.Data\AnimeFlix.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Dashboard\Data\" />
-    <Folder Include="Areas\Player\Data\" />
-    <Folder Include="Areas\Player\Models\" />
   </ItemGroup>
 
 </Project>

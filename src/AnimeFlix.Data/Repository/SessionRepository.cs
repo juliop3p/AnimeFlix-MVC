@@ -1,5 +1,5 @@
-﻿using AnimeFlix.Business.Interfaces;
-using AnimeFlix.Business.Models;
+﻿using AnimeFlix.Business.Entities;
+using AnimeFlix.Business.Interfaces;
 using AnimeFlix.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,12 +11,23 @@ namespace AnimeFlix.Data.Repository
         {
         }
 
-        public async Task<List<Session>> GetAllSessionsByUserAsync(Guid userId)
+        public async Task SaveSession(Session session)
         {
-            return await Db.Sessions.AsNoTracking()
-                .Where(s => s.UserId == userId)
-                .Include(a => a.Anime)
-                .ToListAsync();
+            if(session.Id == Guid.Empty)
+            {
+                await  Db.AddAsync(session);
+                await Db.SaveChangesAsync();
+            }
+            else
+            {
+                var existingSession = await Db.Sessions.AsNoTracking().FirstOrDefaultAsync(s => s.Id == session.Id);
+                existingSession.CurrentEp = session.CurrentEp;
+                existingSession.CurrentTime = session.CurrentTime;
+
+                Db.Sessions.Update(existingSession);
+            }
+
+            await Db.SaveChangesAsync();
         }
     }
 }

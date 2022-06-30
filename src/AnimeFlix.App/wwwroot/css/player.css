@@ -1,0 +1,126 @@
+﻿body {
+    font-family: "Roboto";
+    background-color: var(--dark);
+}
+
+video {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+video::before {
+    background-color: var(--dark);
+}
+
+.sob-layer {
+    display: none;
+    grid-template-rows: 15% 70% 15%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .8);
+    top: 0px;
+    position: absolute;
+    color: var(--white);
+}
+
+.sob-layer .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 128px;
+}
+
+.anime-name {
+    font-size: 24px;
+}
+
+.sob-layer .middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sob-layer .bottom {
+    display: grid;
+    grid-auto-rows: 60px 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.percentage-bar {
+    width: 100vw;
+    padding: 0px 128px;
+}
+
+.percentage-bar input {
+    width: 100%;
+}
+
+.sob-layer .bottom .bottom-controls {
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 128px;
+    font-size: 24px;
+}
+
+.sob-layer .bottom .next-ep {
+    text-decoration: none;
+    color: var(--white);
+}
+
+.vertical-bar {
+    display: block;
+    width: 1px;
+    height: 30px;
+    background-color: var(--gray);
+}
+
+.fa-up-right-and-down-left-from-center {
+    padding: 0px 16px;
+}
+
+select {
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+}
+
+.remaining-time {
+    color: #808080;
+    font-weight: 300;
+}
+
+#play {
+    display: none;
+}
+
+#minimize {
+    display: none;
+}
+
+.dropdown-menu {
+    height: 400px;
+    overflow-y: scroll;
+}
+
+/* Scroll Bar */
+.dropdown-menu::-webkit-scrollbar {
+    width: 0.3rem;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+    background: var(--dark-light);
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    height: 4rem;
+}
